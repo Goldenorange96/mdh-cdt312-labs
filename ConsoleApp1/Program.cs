@@ -10,20 +10,20 @@ namespace cdt312_assignments
     {
         static void Main(string[] args)
         {
-            //closed used to keep all visited nodes.
-            List<State> closed = new List<State>();
             //queue for created nodes.
-            Queue<State> open;
+            Queue<State> open = null;
             //read info 
             List<State> allItems = new List<State>();
-            ReadFileAndGenerateList(allItems);
+            int knapsackLimit = 0;
+            ReadFileAndGenerateList(allItems, out knapsackLimit);
             InitQueue(out open);
             BreadthFirstSearch(open, allItems);
             //PrintList(allItems);
         }
 
-        static void ReadFileAndGenerateList(List<State> allItems)
+        static void ReadFileAndGenerateList(List<State> allItems, out int knapsackLimit)
         {
+            knapsackLimit = 0;
             System.IO.StreamReader file = new System.IO.StreamReader(@"C:.\knapsack.txt");
             string line = null;
             string[] subStrings;
@@ -34,6 +34,10 @@ namespace cdt312_assignments
                 subStrings = line.Split(null);
                 if (!int.TryParse(subStrings[0], out id))
                 {
+                    if (subStrings[0] == "MAXIMUM")
+                    {
+                        knapsackLimit = Convert.ToInt32(subStrings[2]);
+                    }
                 }
                 else
                 {
@@ -64,30 +68,64 @@ namespace cdt312_assignments
         {
             //get initial state
             State childState = null;
-            State parentState = stateQueue.Dequeue();
+            State parentState = null;
+            //closed used to keep all visited nodes.
+            List<State> closed = new List<State>();
             int curItem = 0;
-            while (curItem < allItems.Count)
+            while (stateQueue.Count > 0)
             {
-                for (int i = curItem; i < curItem+2; i++)
+                parentState = stateQueue.Dequeue();
+                //special case root children
+                if (curItem == 0)
+                {
+                    for (int i = 1; i < 4; i++)
+                    {
+                        childState = allItems[i];
+                        childState.parentNode = parentState;
+                        stateQueue.Enqueue(childState);
+                        closed.Add(parentState);
+                    }
+                    curItem += 3;
+                }
+
+                for (int i = curItem; i < curItem + 2; i++)
                 {
                     childState = allItems[i];
                     childState.parentNode = parentState;
-                    stateQueue.Enqueue(childState);
-                    curItem++;
-                }
-                parentState = stateQueue.Dequeue();
-            }
+                    if (closed.Contains(childState))
+                    {
 
+                    }
+                    else
+                    {
+                        stateQueue.Enqueue(childState);
+                    }
+
+                }
+            }
+            Console.ReadKey();
             return true;
         }
+
+        //static bool IsGoal(List<State> closed)
+        //{
+        //    if()
+        //}
 
         bool DepthFirstSearch()
         {
             return true;
         }
 
-        bool IsGoalState()
+        bool IsGoalState(int knapsackLimit, List<State> closed)
         {
+            int currentWeight = 0;
+            for (int i = 0; i < closed.Count; i++)
+                currentWeight += closed[i].itemWeight;
+
+            if (currentWeight > knapsackLimit)
+                return false;
+
             return true;
         }
     }
