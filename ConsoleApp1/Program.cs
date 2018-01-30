@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ConsoleApp1;
 
 namespace cdt312_assignments
 {
@@ -11,24 +12,25 @@ namespace cdt312_assignments
         static void Main(string[] args)
         {
             //queue for created nodes.
-            Queue<State> open = null;
+            Queue<Node> frontier = null;
             //read info 
-            List<State> allItems = new List<State>();
+            List<Item> items = new List<Item>();
+            List<Item> solution = new List<Item>();
             int knapsackLimit = 0;
-            ReadFileAndGenerateList(allItems, out knapsackLimit);
-            InitQueue(out open);
-            BreadthFirstSearch(open, allItems);
-            //PrintList(allItems);
+            ReadFileAndGenerateList(items, out knapsackLimit);
+            frontier = InitQueue();
+            solution = BreadthFirstSearch(items, knapsackLimit);
+            PrintList(solution);
+            Console.ReadKey();
         }
 
-        static void ReadFileAndGenerateList(List<State> allItems, out int knapsackLimit)
+        static void ReadFileAndGenerateList(List<Item> allItems, out int knapsackLimit)
         {
             knapsackLimit = 0;
             System.IO.StreamReader file = new System.IO.StreamReader(@"C:.\knapsack.txt");
             string line = null;
             string[] subStrings;
-            int id, itemBenefit, itemWeight;
-
+            int id;
             while((line = file.ReadLine()) != null)           
             {
                 subStrings = line.Split(null);
@@ -42,107 +44,123 @@ namespace cdt312_assignments
                 else
                 {
                     id = Convert.ToInt32(subStrings[0]);
-                    itemBenefit = Convert.ToInt32(subStrings[1]);
-                    itemWeight = Convert.ToInt32(subStrings[2]);
-                    State newState = new State(id, itemWeight, itemBenefit, null);
-                    allItems.Add(newState);
+                    Item newItem = new Item(Convert.ToInt32(subStrings[2]), id, Convert.ToInt32(subStrings[1]));
+                    allItems.Add(newItem);
                 }
             }
             file.Close();
         }
 
-        static void PrintList(List<State> listToPrint)
+        static void PrintList(List<Item> listToPrint)
         {
-            foreach (State item in listToPrint)
-                Console.WriteLine("id: {0} b: {1} w: {2}", item.itemNo, item.itemBenefit, item.itemWeight);
-        }
-
-        static void InitQueue(out Queue<State> newQueue)
-        {
-            State initialState = new State(0, 0, 0, null);
-            newQueue = new Queue<State>();
-            newQueue.Enqueue(initialState);
-        }
-
-        static bool BreadthFirstSearch(Queue<State> stateQueue, List<State> allItems)
-        {
-            //get initial state
-            State childState = null;
-            State parentState = null;
-            //closed used to keep all visited nodes.
-            List<State> closed = new List<State>();
-            int curItem = 0;
-            while (stateQueue.Count > 0)
+            if (listToPrint == null)
             {
-                parentState = stateQueue.Dequeue();
-                //special case root children
-                if (curItem == 0)
-                {
-                    for (int i = 1; i < 4; i++)
-                    {
-                        childState = allItems[i];
-                        childState.parentNode = parentState;
-                        stateQueue.Enqueue(childState);
-                        closed.Add(parentState);
-                    }
-                    curItem += 3;
-                }
-
-                for (int i = curItem; i < curItem + 2; i++)
-                {
-                    childState = allItems[i];
-                    childState.parentNode = parentState;
-                    if (closed.Contains(childState))
-                    {
-
-                    }
-                    else
-                    {
-                        stateQueue.Enqueue(childState);
-                    }
-
-                }
+                Console.WriteLine("List sent was null, cannot print list!");
+                return;
             }
-            Console.ReadKey();
-            return true;
+
+            Console.WriteLine("<----------------------->");
+
+            foreach (Item item in listToPrint)
+                Console.WriteLine("id: {0} b: {1} w: {2}", item.itemNo, item.itemBenefit, item.itemWeight);
+
+            Console.WriteLine("<----------------------->");
         }
 
-        //static bool IsGoal(List<State> closed)
-        //{
-        //    if()
-        //}
+        static Queue<Node> InitQueue()
+        {
+            Queue<Node> newQueue = new Queue<Node>();
+            List<Item> newActionsList = new List<Item>();
+            State initialState = new State(newActionsList, 0, 0);
+            Node initialNode = new Node(initialState, null, null, 0);
+            newQueue.Enqueue(initialNode);
+            return newQueue;
+        }
+
+        static List<Item> BreadthFirstSearch(List<Item> items, int knapsackLimit)
+        {
+            int curItem = 0, i = 0, stateWeight = 0, stateBenefit = 0;
+            Node currentBest = new Node();
+            Node parent = new Node();
+            List<Node> visited = new List<Node>();
+            Queue<Node> frontier = InitQueue();
+            while (frontier.Any())
+            {
+                parent = frontier.Dequeue();
+                if (IsGoalState(parent.state.weight))
+                {
+                    return parent.state.actions;
+                }
+
+                if (curItem <= 0)
+                {
+                    while (i < 3)
+                    {
+                        Node childNode = CreateChildNode(parent, items[i]);
+                        if (!visited.Contains(childNode))
+                        {
+                            frontier.Enqueue(childNode);
+                        }
+                        i++;
+                    }
+                    curItem += 2;
+                }
+                else
+                {
+                    if (curItem >= items.Count)
+                    {
+                        break;
+                    }
+                    i = 0;
+                    while (i < 2)
+                    {
+                        Node childNode = CreateChildNode(parent, items[i]);
+                        /*if (!visited.Contains(childNode))
+                        {
+                            frontier.Enqueue(childNode);
+                        }*/
+                        frontier.Enqueue(childNode);
+                        i++;
+                    }
+                    curItem += 2;
+                }
+                Console.WriteLine("Actions to get to parent: ");
+                PrintList(parent.state.actions);
+                Console.WriteLine("Current weight of state: {0} and benefit: {1}", parent.state.weight, parent.state.benefit);
+                visited.Add(parent);
+            }
+            return null;
+        }
+      
+        static Node CreateChildNode(Node parent, Item newAction)
+        {
+            List<Item> newActionsList = parent.state.actions;
+            newActionsList.Add(newAction);
+            int newWeight = 0, newBenefit = 0;
+            foreach (Item action in newActionsList)
+            {
+                newWeight += action.itemWeight;
+                newBenefit += action.itemBenefit;   
+            }
+            State newState = new State(newActionsList, newWeight, newBenefit);
+            Node newChild = new Node(newState, parent, newAction, newAction.itemBenefit);
+            return newChild;
+        }
+
+        static bool IsGoalState(int stateWeight)
+        {
+            if (stateWeight >= 420)
+            {
+                Console.WriteLine("Weight Limit exceeded/reached.");
+                return true;
+            }
+            return false;
+        }
 
         bool DepthFirstSearch()
         {
             return true;
         }
 
-        bool IsGoalState(int knapsackLimit, List<State> closed)
-        {
-            int currentWeight = 0;
-            for (int i = 0; i < closed.Count; i++)
-                currentWeight += closed[i].itemWeight;
-
-            if (currentWeight > knapsackLimit)
-                return false;
-
-            return true;
-        }
     }
-
-    class State
-    {
-        public State parentNode;
-        public int itemNo;
-        public int itemWeight;
-        public int itemBenefit;
-        public State(int newItemNo, int newItemWeight, int newItemBenefit, State newParentNode)
-        {
-            itemNo = newItemNo;
-            itemWeight = newItemWeight;
-            itemBenefit = newItemBenefit;
-            parentNode = newParentNode;
-        }
-    }
-
 }
