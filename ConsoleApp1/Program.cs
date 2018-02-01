@@ -30,7 +30,7 @@ namespace cdt312_assignments
             System.IO.StreamReader file = new System.IO.StreamReader(@"C:.\knapsack.txt");
             string line = null;
             string[] subStrings;
-            int id;
+            int id = 0;
             while((line = file.ReadLine()) != null)           
             {
                 subStrings = line.Split(null);
@@ -83,6 +83,7 @@ namespace cdt312_assignments
             Node currentBest = new Node();
             Node parent = new Node();
             List<Node> visited = new List<Node>();
+            List<Node> children = new List<Node>();
             Queue<Node> frontier = InitQueue();
             while (frontier.Any())
             {
@@ -97,10 +98,10 @@ namespace cdt312_assignments
                     while (i < 3)
                     {
                         Node childNode = CreateChildNode(parent, items[i]);
-                        if (!visited.Contains(childNode))
+                        /*if (!visited.Contains(childNode))
                         {
                             frontier.Enqueue(childNode);
-                        }
+                        }*/
                         i++;
                     }
                     curItem += 2;
@@ -131,7 +132,19 @@ namespace cdt312_assignments
             }
             return null;
         }
-      
+
+        static List<Node> GetSuccessors(Node parent, List<Item> possibleActions)
+        {
+            List<Node> successors = new List<Node>();
+
+            for (int i = 0; i < possibleActions.Count; i++)
+            {
+                CreateChildNode(parent, possibleActions[i]);
+            }
+
+            return successors;
+        }
+
         static Node CreateChildNode(Node parent, Item newAction)
         {
             List<Item> newActionsList = parent.state.actions;
