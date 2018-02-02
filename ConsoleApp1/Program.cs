@@ -72,74 +72,61 @@ namespace cdt312_assignments
             Queue<Node> newQueue = new Queue<Node>();
             List<Item> newActionsList = new List<Item>();
             State initialState = new State(newActionsList, 0, 0);
-            Node initialNode = new Node(initialState, null, null, 0);
+            Item initialAction = new Item(0, 0, 0);
+            
+            Node initialNode = new Node(initialState, null, initialAction, 0);
+            initialNode.action = initialAction;
             newQueue.Enqueue(initialNode);
             return newQueue;
         }
 
         static List<Item> BreadthFirstSearch(List<Item> items, int knapsackLimit)
         {
-            int curItem = 0, i = 0, stateWeight = 0, stateBenefit = 0;
             Node currentBest = new Node();
             Node parent = new Node();
             List<Node> visited = new List<Node>();
-            List<Node> children = new List<Node>();
             Queue<Node> frontier = InitQueue();
+            currentBest = frontier.Peek();
             while (frontier.Any())
             {
                 parent = frontier.Dequeue();
-                if (IsGoalState(parent.state.weight))
+                if ((parent.state.weight < knapsackLimit) && (parent.state.benefit > currentBest.state.benefit))
                 {
-                    return parent.state.actions;
+                    currentBest = parent;
                 }
 
-                if (curItem <= 0)
+                foreach (Node item in GetSuccessors(parent, items))
                 {
-                    while (i < 3)
+                    if (!visited.Contains(item))
                     {
-                        Node childNode = CreateChildNode(parent, items[i]);
-                        /*if (!visited.Contains(childNode))
-                        {
-                            frontier.Enqueue(childNode);
-                        }*/
-                        i++;
+                        frontier.Enqueue(item);
                     }
-                    curItem += 2;
                 }
-                else
-                {
-                    if (curItem >= items.Count)
-                    {
-                        break;
-                    }
-                    i = 0;
-                    while (i < 2)
-                    {
-                        Node childNode = CreateChildNode(parent, items[i]);
-                        /*if (!visited.Contains(childNode))
-                        {
-                            frontier.Enqueue(childNode);
-                        }*/
-                        frontier.Enqueue(childNode);
-                        i++;
-                    }
-                    curItem += 2;
-                }
-                Console.WriteLine("Actions to get to parent: ");
-                PrintList(parent.state.actions);
-                Console.WriteLine("Current weight of state: {0} and benefit: {1}", parent.state.weight, parent.state.benefit);
+                //Console.WriteLine("Actions to get to parent: ");
+                //PrintList(parent.state.actions);
+                //Console.WriteLine("Current weight of state: {0} and benefit: {1}", parent.state.weight, parent.state.benefit);
                 visited.Add(parent);
             }
-            return null;
+            return currentBest.state.actions;
         }
 
-        static List<Node> GetSuccessors(Node parent, List<Item> possibleActions)
+        static List<Node> GetSuccessors(Node parent, List<Item> allItems)
         {
             List<Node> successors = new List<Node>();
+            List<Item> possibleActions = new List<Item>();
+
+            for (int i = 0; i < allItems.Count; i++)
+            {
+                if (allItems[i].itemNo != parent.action.itemNo)
+                {
+                    possibleActions.Add(allItems[i]);
+
+                }
+            }
 
             for (int i = 0; i < possibleActions.Count; i++)
             {
-                CreateChildNode(parent, possibleActions[i]);
+                successors.Add(CreateChildNode(parent, possibleActions[i]));
             }
 
             return successors;
