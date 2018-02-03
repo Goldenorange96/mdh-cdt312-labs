@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ConsoleApp1;
 
 namespace cdt312_assignments
 {
@@ -16,11 +15,20 @@ namespace cdt312_assignments
             //read info 
             List<Item> items = new List<Item>();
             List<Item> solution = new List<Item>();
-            int knapsackLimit = 0;
+            int knapsackLimit = 0, weight = 0, benefit = 0;
             ReadFileAndGenerateList(items, out knapsackLimit);
             frontier = InitQueue();
+            var stopwatch = System.Diagnostics.Stopwatch.StartNew();
             solution = BreadthFirstSearch(items, knapsackLimit);
+            stopwatch.Stop();
+            Console.WriteLine("BFS took: {0} ms", stopwatch.ElapsedMilliseconds);
             PrintList(solution);
+            foreach (Item action in solution)
+            {
+                weight += action.itemWeight;
+                benefit += action.itemBenefit;
+            }
+            Console.WriteLine("w: {0}, b: {1}", weight, benefit);
             Console.ReadKey();
         }
 
@@ -44,7 +52,7 @@ namespace cdt312_assignments
                 else
                 {
                     id = Convert.ToInt32(subStrings[0]);
-                    Item newItem = new Item(Convert.ToInt32(subStrings[2]), id, Convert.ToInt32(subStrings[1]));
+                    Item newItem = new Item(Convert.ToInt32(subStrings[1]), id, Convert.ToInt32(subStrings[2]));
                     allItems.Add(newItem);
                 }
             }
@@ -71,10 +79,9 @@ namespace cdt312_assignments
         {
             Queue<Node> newQueue = new Queue<Node>();
             List<Item> newActionsList = new List<Item>();
-            State initialState = new State(newActionsList, 0, 0);
+            //State initialState = new State(newActionsList, 0, 0);
             Item initialAction = new Item(0, 0, 0);
-            
-            Node initialNode = new Node(initialState, null, initialAction, 0);
+            Node initialNode = new Node(null, initialAction, 0, 0, newActionsList, 0, 0, 0);
             initialNode.action = initialAction;
             newQueue.Enqueue(initialNode);
             return newQueue;
@@ -84,74 +91,57 @@ namespace cdt312_assignments
         {
             Node currentBest = new Node();
             Node parent = new Node();
-            List<Node> visited = new List<Node>();
             Queue<Node> frontier = InitQueue();
             currentBest = frontier.Peek();
-            while (frontier.Any())
+            while (frontier.Count > 0)
             {
                 parent = frontier.Dequeue();
-                if ((parent.state.weight < knapsackLimit) && (parent.state.benefit > currentBest.state.benefit))
+                if (!(parent.weight > knapsackLimit))
                 {
-                    currentBest = parent;
-                }
+                    if (IsGoalState(parent, currentBest, knapsackLimit))
+                    {
+                        currentBest = parent;
+                    }
 
-                foreach (Node item in GetSuccessors(parent, items))
-                {
-                    if (!visited.Contains(item))
+                    foreach (Node item in GetSuccessors(parent, items))
                     {
                         frontier.Enqueue(item);
                     }
                 }
-                //Console.WriteLine("Actions to get to parent: ");
-                //PrintList(parent.state.actions);
-                //Console.WriteLine("Current weight of state: {0} and benefit: {1}", parent.state.weight, parent.state.benefit);
-                visited.Add(parent);
             }
-            return currentBest.state.actions;
+            return currentBest.actions;
         }
 
         static List<Node> GetSuccessors(Node parent, List<Item> allItems)
         {
             List<Node> successors = new List<Node>();
-            List<Item> possibleActions = new List<Item>();
-
+            Node tmp = new Node();
+            tmp = parent;
             for (int i = 0; i < allItems.Count; i++)
             {
-                if (allItems[i].itemNo != parent.action.itemNo)
+                if ((allItems[i].itemNo != tmp.action.itemNo) && !(tmp.actions.Contains(allItems[i])))
                 {
-                    possibleActions.Add(allItems[i]);
-
+                    successors.Add(CreateChildNode(tmp, allItems[i]));
                 }
             }
-
-            for (int i = 0; i < possibleActions.Count; i++)
-            {
-                successors.Add(CreateChildNode(parent, possibleActions[i]));
-            }
-
             return successors;
         }
 
         static Node CreateChildNode(Node parent, Item newAction)
         {
-            List<Item> newActionsList = parent.state.actions;
+            List<Item> newActionsList = new List<Item>(parent.actions);
             newActionsList.Add(newAction);
-            int newWeight = 0, newBenefit = 0;
-            foreach (Item action in newActionsList)
-            {
-                newWeight += action.itemWeight;
-                newBenefit += action.itemBenefit;   
-            }
-            State newState = new State(newActionsList, newWeight, newBenefit);
-            Node newChild = new Node(newState, parent, newAction, newAction.itemBenefit);
+            int newWeight = parent.weight + newAction.itemWeight;
+            int newBenefit = parent.benefit + newAction.itemBenefit;
+            //State newState = new State(newActionsList, newWeight, newBenefit);
+            Node newChild = new Node(parent, newAction, newWeight, newBenefit, newActionsList, newAction.itemNo, newAction.itemWeight, newAction.itemBenefit);
             return newChild;
         }
 
-        static bool IsGoalState(int stateWeight)
+        static bool IsGoalState(Node current, Node best, int limit)
         {
-            if (stateWeight >= 420)
+            if ((current.weight < limit) && (current.benefit > best.benefit))
             {
-                Console.WriteLine("Weight Limit exceeded/reached.");
                 return true;
             }
             return false;
@@ -162,5 +152,43 @@ namespace cdt312_assignments
             return true;
         }
 
+        class Node
+        {
+            public Node parent;
+            public Item action;
+            public int itemNo;
+            public int itemWeight;
+            public int itemBenefit;
+            public int weight;
+            public int benefit;
+            public List<Item> actions;
+            public Node()
+            {
+            }
+            public Node(Node newParent, Item newAction, int newStateWeight, int newStateBenefit, List<Item> newActionsList, int newItemNo, int newItemWeight, int newItemBenefit)
+            {
+                weight = newStateWeight;
+                benefit = newStateBenefit;
+                actions = newActionsList;
+                parent = newParent;
+                action = newAction;
+                itemNo = newItemNo;
+                itemWeight = newItemWeight;
+                itemBenefit = newItemBenefit;
+            }
+        }
+
+        class Item
+        {
+            public int itemNo;
+            public int itemBenefit;
+            public int itemWeight;
+            public Item(int newItemBenefit, int newItemNo, int newItemWeight)
+            {
+                itemBenefit = newItemBenefit;
+                itemNo = newItemNo;
+                itemWeight = newItemWeight;
+            }
+        }
     }
 }
