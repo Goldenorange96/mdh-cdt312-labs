@@ -14,11 +14,12 @@ namespace ConsoleApp1
         public int itemBenefit;
         public int weight;
         public int benefit;
+        public int depth;
         public List<Item> actions;
         public Node()
         {
         }
-        public Node(Node newParent, int newStateWeight, int newStateBenefit, List<Item> newActionsList, int newItemNo, int newItemWeight, int newItemBenefit)
+        public Node(Node newParent, int newStateWeight, int newStateBenefit, List<Item> newActionsList, int newItemNo, int newItemWeight, int newItemBenefit, int newDepth)
         {
             weight = newStateWeight;
             benefit = newStateBenefit;
@@ -27,6 +28,7 @@ namespace ConsoleApp1
             itemNo = newItemNo;
             itemWeight = newItemWeight;
             itemBenefit = newItemBenefit;
+            depth = newDepth;
         }
     }
 }

@@ -5,3 +5,9 @@ C:\Users\GoldenOrange\mdh-cdt312-labs\ConsoleApp1\obj\Release\cdt312_assign_1.cs
 C:\Users\GoldenOrange\mdh-cdt312-labs\ConsoleApp1\obj\Release\ConsoleApp1.exe
 C:\Users\GoldenOrange\mdh-cdt312-labs\ConsoleApp1\obj\Release\ConsoleApp1.pdb
 C:\Users\GoldenOrange\mdh-cdt312-labs\ConsoleApp1\obj\Release\cdt312_assign_1.csprojResolveAssemblyReference.cache
+C:\Users\Janne Suuronen\mdh-cdt312-labs\ConsoleApp1\bin\Release\ConsoleApp1.exe.config
+C:\Users\Janne Suuronen\mdh-cdt312-labs\ConsoleApp1\bin\Release\ConsoleApp1.exe
+C:\Users\Janne Suuronen\mdh-cdt312-labs\ConsoleApp1\bin\Release\ConsoleApp1.pdb
+C:\Users\Janne Suuronen\mdh-cdt312-labs\ConsoleApp1\obj\Release\cdt312_assign_1.csprojResolveAssemblyReference.cache
+C:\Users\Janne Suuronen\mdh-cdt312-labs\ConsoleApp1\obj\Release\ConsoleApp1.exe
+C:\Users\Janne Suuronen\mdh-cdt312-labs\ConsoleApp1\obj\Release\ConsoleApp1.pdb

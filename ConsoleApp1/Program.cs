@@ -13,6 +13,7 @@ namespace cdt312_assignments
             List<Item> items = new List<Item>();
             List<Item> solution = new List<Item>();
             int knapsackLimit = 0, weight = 0, benefit = 0;
+            ReadFileAndGenerateList(items, out knapsackLimit);
             var stopwatch = System.Diagnostics.Stopwatch.StartNew();
             solution = BreadthFirstSearch(items, knapsackLimit);
             stopwatch.Stop();
@@ -74,48 +75,54 @@ namespace cdt312_assignments
         {
             Queue<Node> newQueue = new Queue<Node>();
             List<Item> newActionsList = new List<Item>();
-            //State initialState = new State(newActionsList, 0, 0);
-            //Item initialAction = new Item(0, 0, 0);
-            Node initialNode = new Node(null, 0, 0, newActionsList, 0, 0, 0);
-            
+            Node initialNode = new Node(null, 0, 0, newActionsList, 0, 0, 0, 0);
             newQueue.Enqueue(initialNode);
             return newQueue;
         }
 
         static List<Item> BreadthFirstSearch(List<Item> items, int knapsackLimit)
         {
-            ReadFileAndGenerateList(items, out knapsackLimit);
             Node currentBest = new Node();
             Node parent = new Node();
             Queue<Node> frontier = InitQueue();
+            List<Node> successors = new List<Node>();
+            List<Node> explored = new List<Node>();
             while (frontier.Count > 0)
             {
                 parent = frontier.Dequeue();
-                if (parent.weight < knapsackLimit)
+                if(parent.itemNo != 0)
                 {
                     if ((parent.weight < knapsackLimit) && (parent.benefit > currentBest.benefit))
                     {
                         currentBest = parent;
                     }
-
-                    foreach (Node item in GetSuccessors(parent, items))
+                    foreach (Node successor in GetSuccessors(parent, items, explored))
                     {
-                        frontier.Enqueue(item);
+                        frontier.Enqueue(successor);
                     }
                 }
-               
+                else
+                {
+                    foreach (Node successor in GetSuccessors(parent, items, explored))
+                    {
+                        frontier.Enqueue(successor);
+                    }
+                }
             }
             return currentBest.actions;
         }
 
-        static List<Node> GetSuccessors(Node parent, List<Item> allItems)
+        static List<Node> GetSuccessors(Node parent, List<Item> allItems, List<Node> explored)
         {
             List<Node> successors = new List<Node>();
             for (int i = 0; i < allItems.Count; i++)
             {
                 if ((allItems[i].itemNo != parent.itemNo) && !(parent.actions.Contains(allItems[i])))
                 {
-                    successors.Add(CreateChildNode(parent, allItems[i]));
+                    if(parent.weight + allItems[i].itemWeight < 420)
+                    {
+                        successors.Add(CreateChildNode(parent, allItems[i]));
+                    }
                 }
             }
             return successors;
@@ -127,7 +134,7 @@ namespace cdt312_assignments
             newActionsList.Add(newAction);
             int newWeight = parent.weight + newAction.itemWeight;
             int newBenefit = parent.benefit + newAction.itemBenefit;
-            Node newChild = new Node(parent, newWeight, newBenefit, newActionsList, newAction.itemNo, newAction.itemWeight, newAction.itemBenefit);
+            Node newChild = new Node(parent, newWeight, newBenefit, newActionsList, newAction.itemNo, newAction.itemWeight, newAction.itemBenefit, parent.depth+1);
             return newChild;
         }
 
