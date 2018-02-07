@@ -19,7 +19,7 @@ namespace cdt312_assignments
             BFSsolution = BreadthFirstSearch(items, knapsackLimit);
             stopwatch.Stop();
             Console.WriteLine("BFS took: {0} ms", stopwatch.ElapsedMilliseconds);
-            PrintList(BFSsolution);
+            PrintItemList(BFSsolution);
             foreach (Item action in BFSsolution)
             {
                 BFSWeight += action.itemWeight;
@@ -31,7 +31,7 @@ namespace cdt312_assignments
             stopwatch.Stop();
             Console.WriteLine("######################");
             Console.WriteLine("DFS took: {0} ms", stopwatch.ElapsedMilliseconds);
-            PrintList(DFSSolution);
+            PrintItemList(DFSSolution);
             foreach (Item action in DFSSolution)
             {
                 DFSWeight += action.itemWeight;
@@ -68,7 +68,7 @@ namespace cdt312_assignments
             file.Close();
         }
 
-        static void PrintList(List<Item> listToPrint)
+        static void PrintItemList(List<Item> listToPrint)
         {
             if (listToPrint == null)
             {
@@ -110,6 +110,7 @@ namespace cdt312_assignments
             Node parent = new Node();
             Queue<Node> frontier = InitQueue();
             List<Node> successors = new List<Node>();
+            List<Node> explored = new List<Node>();
             while (frontier.Count > 0)
             {
                 parent = frontier.Dequeue();
