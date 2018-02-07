@@ -7,7 +7,7 @@ namespace cdt312_assign_2
     {
         static void Main(string[] args)
         {
-            List<Node> allPaths = new List<Node>();
+            List<Path> allPaths = new List<Path>();
             List<City> allCities = new List<City>();
             ReadFileAndGenerateLists(allPaths, allCities);
             PrintPathList(allPaths);
@@ -15,7 +15,7 @@ namespace cdt312_assign_2
             Console.ReadKey();
         }
 
-        static void ReadFileAndGenerateLists(List<Node> allPaths, List<City> allCities)
+        static void ReadFileAndGenerateLists(List<Path> allPaths, List<City> allCities)
         {
             System.IO.StreamReader file = new System.IO.StreamReader(@"C:.\Spain_map.txt");
             string line = null;
@@ -54,7 +54,7 @@ namespace cdt312_assign_2
             Console.WriteLine("<----------------------->");
         }
 
-        static void PrintPathList(List<Node> listToPrint)
+        static void PrintPathList(List<Path> listToPrint)
         {
             if (listToPrint == null)
             {
@@ -68,6 +68,65 @@ namespace cdt312_assign_2
                 Console.WriteLine("|From: {0} To: {1} Cost: {2}|", node.fromCity, node.toCity, node.pathCost);
 
             Console.WriteLine("<----------------------->");
+        }
+
+        static List<Node> GetSuccessors(Node parent, List<Item> allItems)
+        {
+            List<Node> successors = new List<Node>();
+            for (int i = 0; i < allItems.Count; i++)
+            {
+                if ((allItems[i].itemNo != parent.action.itemNo) && !(parent.actions.Contains(allItems[i])))
+                {
+                    if (parent.weight + allItems[i].itemWeight < 420)
+                    {
+                        successors.Add(CreateChildNode(parent, allItems[i]));
+                    }
+                }
+            }
+            return successors;
+        }
+
+        static List<Node> GreedyBestFirstSearch(List<Path> allPaths, List<City> allCities)
+        {
+            List<Node> solution = new List<Node>();
+            Node currentBest = new Node();
+            Node parent = new Node();
+            Stack<Node> frontier = new Stack<Node>();
+            List<Node> successors = new List<Node>();
+            while (frontier.Count > 0)
+            {
+                parent = frontier.Pop();
+                if(parent.)
+
+                //if (parent.action.itemNo != 0)
+                //{
+                //    if ((parent.weight < knapsackLimit) && (parent.benefit > currentBest.benefit))
+                //    {
+                //        currentBest = parent;
+                //    }
+                //    foreach (Node successor in GetSuccessors(parent, items))
+                //    {
+                //        frontier.Push(successor);
+                //    }
+                //}
+                //else
+                //{
+                //    foreach (Node successor in GetSuccessors(parent, items))
+                //    {
+                //        frontier.Push(successor);
+                //    }
+                //}
+            }
+            return solution;
+
+
+            return solution;
+        }
+
+        static List<Node> AStarSearch(List<Node> allPaths, List<City> allCities)
+        {
+            List<Node> solution = new List<Node>();
+            return solution;
         }
     }
 }

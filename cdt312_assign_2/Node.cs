@@ -8,14 +8,17 @@ namespace cdt312_assign_2
 {
     class Node
     {
-        public string fromCity;
-        public string toCity;
-        public int pathCost;
-        public Node(string newFromCity, string newToCity, int newPathCost)
+        City currentCity;
+        List<Node> visitedCities;
+        int currentPathCost;
+        public Node()
         {
-            fromCity = newFromCity;
-            toCity = newToCity;
-            pathCost = newPathCost;
+        }
+        public Node(City newCurrentCity, List<Node> newVisitedCities, int newPathCost)
+        {
+            currentCity = newCurrentCity;
+            visitedCities = new List<Node>(newVisitedCities);
+            currentPathCost = newPathCost;
         }
     }
 }
