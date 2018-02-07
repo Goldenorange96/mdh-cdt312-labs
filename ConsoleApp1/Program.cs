@@ -11,20 +11,33 @@ namespace cdt312_assignments
         static void Main(string[] args)
         {
             List<Item> items = new List<Item>();
-            List<Item> solution = new List<Item>();
-            int knapsackLimit = 0, weight = 0, benefit = 0;
+            List<Item> BFSsolution = new List<Item>();
+            List<Item> DFSSolution = new List<Item>();
+            int knapsackLimit = 0, BFSWeight = 0, BFSBenefit = 0, DFSWeight = 0, DFSBenefit = 0;
             ReadFileAndGenerateList(items, out knapsackLimit);
             var stopwatch = System.Diagnostics.Stopwatch.StartNew();
-            solution = BreadthFirstSearch(items, knapsackLimit);
+            BFSsolution = BreadthFirstSearch(items, knapsackLimit);
             stopwatch.Stop();
             Console.WriteLine("BFS took: {0} ms", stopwatch.ElapsedMilliseconds);
-            PrintList(solution);
-            foreach (Item action in solution)
+            PrintList(BFSsolution);
+            foreach (Item action in BFSsolution)
             {
-                weight += action.itemWeight;
-                benefit += action.itemBenefit;
+                BFSWeight += action.itemWeight;
+                BFSBenefit += action.itemBenefit;
             }
-            Console.WriteLine("w: {0}, b: {1}", weight, benefit);
+            Console.WriteLine("w: {0}, b: {1}", BFSWeight, BFSBenefit);
+            stopwatch = System.Diagnostics.Stopwatch.StartNew();
+            DFSSolution = DepthFirstSearch(items, knapsackLimit);
+            stopwatch.Stop();
+            Console.WriteLine("######################");
+            Console.WriteLine("DFS took: {0} ms", stopwatch.ElapsedMilliseconds);
+            PrintList(DFSSolution);
+            foreach (Item action in DFSSolution)
+            {
+                DFSWeight += action.itemWeight;
+                DFSBenefit += action.itemBenefit;
+            }
+            Console.WriteLine("w: {0}, b: {1}", DFSWeight, DFSBenefit);
             Console.ReadKey();
         }
 
@@ -75,9 +88,20 @@ namespace cdt312_assignments
         {
             Queue<Node> newQueue = new Queue<Node>();
             List<Item> newActionsList = new List<Item>();
-            Node initialNode = new Node(null, 0, 0, newActionsList, 0, 0, 0, 0);
+            Item initialAction = new Item(0, 0, 0);
+            Node initialNode = new Node(null, 0, 0, newActionsList, initialAction);
             newQueue.Enqueue(initialNode);
             return newQueue;
+        }
+
+        static Stack<Node> InitStack()
+        {
+            Stack<Node> newStack = new Stack<Node>();
+            List<Item> newActionsList = new List<Item>();
+            Item initialAction = new Item(0, 0, 0);
+            Node initialNode = new Node(null, 0, 0, newActionsList, initialAction);
+            newStack.Push(initialNode);
+            return newStack;
         }
 
         static List<Item> BreadthFirstSearch(List<Item> items, int knapsackLimit)
@@ -86,24 +110,23 @@ namespace cdt312_assignments
             Node parent = new Node();
             Queue<Node> frontier = InitQueue();
             List<Node> successors = new List<Node>();
-            List<Node> explored = new List<Node>();
             while (frontier.Count > 0)
             {
                 parent = frontier.Dequeue();
-                if(parent.itemNo != 0)
+                if(parent.action.itemNo != 0)
                 {
                     if ((parent.weight < knapsackLimit) && (parent.benefit > currentBest.benefit))
                     {
                         currentBest = parent;
                     }
-                    foreach (Node successor in GetSuccessors(parent, items, explored))
+                    foreach (Node successor in GetSuccessors(parent, items))
                     {
                         frontier.Enqueue(successor);
                     }
                 }
                 else
                 {
-                    foreach (Node successor in GetSuccessors(parent, items, explored))
+                    foreach (Node successor in GetSuccessors(parent, items))
                     {
                         frontier.Enqueue(successor);
                     }
@@ -112,12 +135,12 @@ namespace cdt312_assignments
             return currentBest.actions;
         }
 
-        static List<Node> GetSuccessors(Node parent, List<Item> allItems, List<Node> explored)
+        static List<Node> GetSuccessors(Node parent, List<Item> allItems)
         {
             List<Node> successors = new List<Node>();
             for (int i = 0; i < allItems.Count; i++)
             {
-                if ((allItems[i].itemNo != parent.itemNo) && !(parent.actions.Contains(allItems[i])))
+                if ((allItems[i].itemNo != parent.action.itemNo) && !(parent.actions.Contains(allItems[i])))
                 {
                     if(parent.weight + allItems[i].itemWeight < 420)
                     {
@@ -134,24 +157,40 @@ namespace cdt312_assignments
             newActionsList.Add(newAction);
             int newWeight = parent.weight + newAction.itemWeight;
             int newBenefit = parent.benefit + newAction.itemBenefit;
-            Node newChild = new Node(parent, newWeight, newBenefit, newActionsList, newAction.itemNo, newAction.itemWeight, newAction.itemBenefit, parent.depth+1);
+            Node newChild = new Node(parent, newWeight, newBenefit, newActionsList, newAction);
             return newChild;
         }
 
-        static bool IsGoalState(Node current, Node best, int limit)
+        static List<Item> DepthFirstSearch(List<Item> items, int knapsackLimit)
         {
-            if ((current.weight < limit) && (current.benefit > best.benefit))
+            Node currentBest = new Node();
+            Node parent = new Node();
+            Stack<Node> frontier = InitStack();
+            List<Node> successors = new List<Node>();
+            while (frontier.Count > 0)
             {
-                return true;
+                parent = frontier.Pop();
+                if (parent.action.itemNo != 0)
+                {
+                    if ((parent.weight < knapsackLimit) && (parent.benefit > currentBest.benefit))
+                    {
+                        currentBest = parent;
+                    }
+                    foreach (Node successor in GetSuccessors(parent, items))
+                    {
+                        frontier.Push(successor);
+                    }
+                }
+                else
+                {
+                    foreach (Node successor in GetSuccessors(parent, items))
+                    {
+                        frontier.Push(successor);
+                    }
+                }
             }
-            return false;
+            return currentBest.actions;
         }
-
-        bool DepthFirstSearch()
-        {
-            return true;
-        }
-
-      
     }
 }
+

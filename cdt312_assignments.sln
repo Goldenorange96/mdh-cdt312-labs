@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26228.12
+VisualStudioVersion = 15.0.27004.2008
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cdt312_assign_1", "ConsoleApp1\cdt312_assign_1.csproj", "{5D9B0FFD-FA8C-459B-9EFE-76A5E55E8BB7}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{53AE1088-00D7-446D-A310-64BDD06DE2C5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cdt312_assign_2", "cdt312_assign_2\cdt312_assign_2.csproj", "{458FFF13-891A-42D3-B687-BF7D763B990C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,6 +19,10 @@ Global
 		{5D9B0FFD-FA8C-459B-9EFE-76A5E55E8BB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5D9B0FFD-FA8C-459B-9EFE-76A5E55E8BB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5D9B0FFD-FA8C-459B-9EFE-76A5E55E8BB7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{458FFF13-891A-42D3-B687-BF7D763B990C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{458FFF13-891A-42D3-B687-BF7D763B990C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{458FFF13-891A-42D3-B687-BF7D763B990C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{458FFF13-891A-42D3-B687-BF7D763B990C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
