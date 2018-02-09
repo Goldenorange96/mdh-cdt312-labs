@@ -122,7 +122,11 @@ namespace cdt312_assignments
                     }
                     foreach (Node successor in GetSuccessors(parent, items))
                     {
-                        frontier.Enqueue(successor);
+                        if (!explored.Contains(successor))
+                        {
+                            frontier.Enqueue(successor);
+                            explored.Add(successor);
+                        }
                     }
                 }
                 else

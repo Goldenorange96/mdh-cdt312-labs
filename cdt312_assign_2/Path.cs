@@ -8,14 +8,14 @@ namespace cdt312_assign_2
 {
     class Path
     {
-        public string fromCity;
-        public string toCity;
+        public string cityA;
+        public string cityB;
         public int pathCost;
         public Path() { }
-        public Path(string newFromCity, string newToCity, int newPathCost)
+        public Path(string newCityA, string newCityB, int newPathCost)
         {
-            fromCity = newFromCity;
-            toCity = newToCity;
+            cityA = newCityA;
+            cityB = newCityB;
             pathCost = newPathCost;
         }
     }
