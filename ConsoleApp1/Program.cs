@@ -114,28 +114,24 @@ namespace cdt312_assignments
             while (frontier.Count > 0)
             {
                 parent = frontier.Dequeue();
-                if(parent.action.itemNo != 0)
+                //if(parent.action.itemNo != 0)
+                //{
+                if ((parent.weight < knapsackLimit) && (parent.benefit > currentBest.benefit))
                 {
-                    if ((parent.weight < knapsackLimit) && (parent.benefit > currentBest.benefit))
-                    {
-                        currentBest = parent;
-                    }
-                    foreach (Node successor in GetSuccessors(parent, items))
-                    {
-                        if (!explored.Contains(successor))
-                        {
-                            frontier.Enqueue(successor);
-                            explored.Add(successor);
-                        }
-                    }
+                    currentBest = parent;
                 }
-                else
+                foreach (Node successor in GetSuccessors(parent, items))
                 {
-                    foreach (Node successor in GetSuccessors(parent, items))
-                    {
-                        frontier.Enqueue(successor);
-                    }
+                    frontier.Enqueue(successor);
                 }
+                //}
+                //else
+                //{
+                //    foreach (Node successor in GetSuccessors(parent, items))
+                //    {
+                //        frontier.Enqueue(successor);
+                //    }
+                //}
             }
             return currentBest.actions;
         }
@@ -145,7 +141,7 @@ namespace cdt312_assignments
             List<Node> successors = new List<Node>();
             for (int i = 0; i < allItems.Count; i++)
             {
-                if ((allItems[i].itemNo != parent.action.itemNo) && !(parent.actions.Contains(allItems[i])))
+                if ((allItems[i].itemNo != parent.action.itemNo) && !(parent.actions.Contains(allItems[i])) && (allItems[i].itemNo > parent.action.itemNo))
                 {
                     if(parent.weight + allItems[i].itemWeight < 420)
                     {
