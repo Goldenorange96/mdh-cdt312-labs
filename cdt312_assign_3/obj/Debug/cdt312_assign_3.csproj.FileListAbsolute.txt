@@ -1,0 +1,7 @@
+C:\Users\GoldenOrange\mdh-cdt312-labs\cdt312_assign_3\bin\Debug\cdt312_assign_3.exe.config
+C:\Users\GoldenOrange\mdh-cdt312-labs\cdt312_assign_3\bin\Debug\cdt312_assign_3.exe
+C:\Users\GoldenOrange\mdh-cdt312-labs\cdt312_assign_3\bin\Debug\cdt312_assign_3.pdb
+C:\Users\GoldenOrange\mdh-cdt312-labs\cdt312_assign_3\obj\Debug\cdt312_assign_3.csproj.CoreCompileInputs.cache
+C:\Users\GoldenOrange\mdh-cdt312-labs\cdt312_assign_3\obj\Debug\cdt312_assign_3.exe
+C:\Users\GoldenOrange\mdh-cdt312-labs\cdt312_assign_3\obj\Debug\cdt312_assign_3.pdb
+C:\Users\GoldenOrange\mdh-cdt312-labs\cdt312_assign_3\obj\Debug\cdt312_assign_3.csprojResolveAssemblyReference.cache
