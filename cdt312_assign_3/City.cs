@@ -12,6 +12,11 @@ namespace Cdt312_assign_3
         public double X;
         public double Y;
 
+        public City()
+        {
+
+        }
+    
         public City(City newCity)
         {
             Id = newCity.Id;
@@ -24,6 +29,11 @@ namespace Cdt312_assign_3
             Id = newId;
             X = newX;
             Y = newY;
+        }
+
+        public double GetDistance(City toCity)
+        {
+            return (Math.Pow((X - toCity.X), 2.0)) + (Math.Pow((Y - toCity.Y), 2.0));
         }
     }
 }

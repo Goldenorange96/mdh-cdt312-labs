@@ -9,12 +9,8 @@
         {
             List<City>allCities = new List<City>();
             ReadFileAndGenerateList(ref allCities);
-            List<Individual> InitialPopulation = InitializePopulation(allCities);
-            PrintCityList(InitialPopulation);
-            for (int i = 0; i < InitialPopulation.Count-1; i++)
-            {
-                Console.WriteLine("Fitness for individual {0} is: {1}", i, CalculateFitness(InitialPopulation[i], allCities));
-            }
+            Population InitialPopulation = InitializePopulation(allCities, allCities.Count);
+            //PrintCityList(InitialPopulation);
             Console.ReadKey();
         }
         /*
@@ -40,6 +36,7 @@
 
             }
             file.Close();
+            allCities.Add(allCities[0]);
 
         }
         /*
@@ -48,61 +45,62 @@
          * 
          * Function prints the given Individual list including all properties of each item in the list.
          */
-        public static void PrintCityList(List<Individual> listToPrint)
-        {
-            if (listToPrint != null)
-            {
-                Console.WriteLine("<----------------------->");
+        //public static void PrintCityList(List<Individual> listToPrint)
+        //{
+        //    if (listToPrint != null)
+        //    {
+        //        Console.WriteLine("<----------------------->");
 
-                foreach (Individual Individual in listToPrint)
-                {
-                    Console.WriteLine("> Id: {0} X: {1} Y: {2} fitness: {3}", Individual.Id, Individual.X, Individual.Y, Individual.fitness);
-                }
+        //        foreach (Individual Individual in listToPrint)
+        //        {
+        //            Console.WriteLine("> Id: {0} X: {1} Y: {2} fitness: {3}", Individual.Id, Individual.X, Individual.Y, Individual.fitness);
+        //        }
 
-                Console.WriteLine("<----------------------->");
-            }
+        //        Console.WriteLine("<----------------------->");
+        //    }
             
-        }
+        //}
         /*
          * input: Individual list representing the space of cities
          * output: Individual list randomised. 
          * 
          * Function copies the space list and passes it to shuffleList.
          */
-        public static Population InitializePopulation(List<City> space)
+        public static Population InitializePopulation(List<City> space, int populationSize)
         {
-            Individual newIndividual = new Individual(space, 0.0);
-            for (var i = 0; i < space.Count - 1; i++)
+            List<Individual> pop = new List<Individual>();
+            Individual newIndividual;
+            for (var i = 0; i < populationSize - 1; i++)
             {
-                ini
+                newIndividual = new Individual(space);
+                newIndividual.Cities = ShuffleList(space, 1, space.Count - 2);
+                newIndividual.CalculateFitness();
+                pop.Add(newIndividual);
             }
-
-
-            Population initialPopulation = new Population(space.Count, )
-            List<Individual> initialPopulation = new List<Individual>(space, 0.0);
-            initialPopulation.Insert(0, space[0]);
-            ShuffleList(ref space, 1, (space.Count - 2));
-            initialPopulation.Add(space[0]);
+            Population initialPopulation = new Population(populationSize, pop);
             return initialPopulation;
         }
+
         /*
         * input: a Individual list
         * output: Individual list shuffled. 
         * 
         * Function shuffles the list using swaps with randomised indexes, done using a rng.
         */
-        public static void ShuffleList(ref List<City> listToShuffle, int start, int end)
+        public static List<City> ShuffleList(List<City> listToShuffle, int start, int end)
         {
             Random rng = new Random();
+            List<City> randomisedList = new List<City>(listToShuffle);
             int j = rng.Next(start, end);
-            Individual tmp;
+            City tmp = new City();
             for (int i = start; i < end; i++)
             {
-                tmp = new Individual(listToShuffle[j]);
+                tmp = listToShuffle[j];
                 listToShuffle[j] = listToShuffle[i];
                 listToShuffle[i] = tmp;
                 j = rng.Next(start, end);
             }
+            return randomisedList;
         }
 
         /* 
@@ -111,19 +109,19 @@
          * 
          * Function takes a population, generates a tournamet based off the parameter and finds the fittest individual of it.
          */
-        public static Individual PerformTournamentSelection(List<Individual> currentPopulation, int tournamentSize)
+        public static Individual PerformTournamentSelection(Population currentPopulation, int tournamentSize)
         {
-            List<Individual> tournament = new List<Individual>();
+            List<Individual> tmp = new List<Individual>();
             Random rng = new Random();
-            int randIndex = rng.Next(1, currentPopulation.Count - 2);
+            int randIndex = rng.Next(0, currentPopulation.PopulationSize);
             for (var i = 0; i <= tournamentSize; i++)
             {
-                tournament.Add(currentPopulation[randIndex]);
-                randIndex = rng.Next(1, currentPopulation.Count - 2);
+                tmp.Add(currentPopulation.Individuals[randIndex]);
+                randIndex = rng.Next(0, currentPopulation.PopulationSize - 1);
             }
+            Population tournament = new Population(tournamentSize, tmp);
             return FindFittest(tournament);
         }
-
 
         /*
        * input: a population
@@ -131,15 +129,14 @@
        * 
        * Function iterates over the population, compares fitness to find best individual.
        */
-        public static Individual FindFittest(List<Individual> population)
+        public static Individual FindFittest(Population population)
         {
-            Individual fittest = new Individual(population[0]);
-
-            for (var i = 1; i < population.Count - 1; i++)
+            Individual fittest = population.Individuals[0];
+            for (var i = 1; i < population.PopulationSize - 1; i++)
             {
-                if (population[i].fitness >= fittest.fitness)
+                if (population.Individuals[i].Fitness >= fittest.Fitness)
                 {
-                    fittest = population[i];
+                    fittest = population.Individuals[i];
                 }
             }
             return fittest;
@@ -152,7 +149,7 @@
 
         public static Individual PerformCrossover(List<Individual> firstParent, List<Individual> secondParent)
         {
-            Individual offspring = new Individual();
+            Individual offspring;
 
 
 
@@ -170,22 +167,6 @@
         //only do swap mutation
         public static void Mutate()
         {
-        }
-
-        /*
-         * input: individual
-         * output: fitness of individual
-         * 
-         * Function calculates the fitness of a provided individual. Fitness is based off the Euclidean distance.
-         */
-        public static double CalculateFitness(Individual individual, List<City> list)
-        {
-            var fitness = 0.0;
-            for (var i = 0; i < list.Count - 1; i++)
-            {
-                fitness += (Math.Pow((list[i].X - individual.X), 2.0)) + (Math.Pow((list[i].Y - individual.Y), 2.0));  
-            }
-            return 1.0/fitness;
         }
 
     }
