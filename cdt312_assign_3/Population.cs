@@ -10,6 +10,13 @@ namespace Cdt312_assign_3
     {
         public List<Individual> Individuals;
         public int PopulationSize;
+
+        public Population(int newPopulationSize)
+        {
+            PopulationSize = newPopulationSize;
+            Individuals = new List<Individual>();
+        }
+
         public Population(int newPopulationSize, List<Individual> newIndividuals)
         {
             PopulationSize = newPopulationSize;

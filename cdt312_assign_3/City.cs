@@ -33,7 +33,9 @@ namespace Cdt312_assign_3
 
         public double GetDistance(City toCity)
         {
-            return (Math.Pow((X - toCity.X), 2.0)) + (Math.Pow((Y - toCity.Y), 2.0));
+            double a = (X - toCity.X) * (X - toCity.X);
+            double b = (Y - toCity.Y) * (Y - toCity.Y);
+            return Math.Sqrt(a + b);
         }
     }
 }
