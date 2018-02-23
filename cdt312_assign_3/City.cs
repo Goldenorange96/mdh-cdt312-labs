@@ -33,8 +33,8 @@ namespace Cdt312_assign_3
 
         public double GetDistance(City toCity)
         {
-            double a = (X - toCity.X) * (X - toCity.X);
-            double b = (Y - toCity.Y) * (Y - toCity.Y);
+            double a = (toCity.X - X) * (toCity.X - X);
+            double b = (toCity.Y - Y) * (toCity.Y - Y);
             return Math.Sqrt(a + b);
         }
     }

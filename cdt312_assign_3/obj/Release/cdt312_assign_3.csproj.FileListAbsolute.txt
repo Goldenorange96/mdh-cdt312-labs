@@ -5,3 +5,9 @@ C:\Users\GoldenOrange\mdh-cdt312-labs\cdt312_assign_3\obj\Release\cdt312_assign_
 C:\Users\GoldenOrange\mdh-cdt312-labs\cdt312_assign_3\obj\Release\cdt312_assign_3.exe
 C:\Users\GoldenOrange\mdh-cdt312-labs\cdt312_assign_3\obj\Release\cdt312_assign_3.pdb
 C:\Users\GoldenOrange\mdh-cdt312-labs\cdt312_assign_3\obj\Release\cdt312_assign_3.csprojResolveAssemblyReference.cache
+C:\Users\Janne Suuronen\mdh-cdt312-labs\cdt312_assign_3\bin\Release\cdt312_assign_3.exe.config
+C:\Users\Janne Suuronen\mdh-cdt312-labs\cdt312_assign_3\bin\Release\cdt312_assign_3.exe
+C:\Users\Janne Suuronen\mdh-cdt312-labs\cdt312_assign_3\bin\Release\cdt312_assign_3.pdb
+C:\Users\Janne Suuronen\mdh-cdt312-labs\cdt312_assign_3\obj\Release\cdt312_assign_3.csprojResolveAssemblyReference.cache
+C:\Users\Janne Suuronen\mdh-cdt312-labs\cdt312_assign_3\obj\Release\cdt312_assign_3.exe
+C:\Users\Janne Suuronen\mdh-cdt312-labs\cdt312_assign_3\obj\Release\cdt312_assign_3.pdb

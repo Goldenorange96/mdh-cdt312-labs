@@ -5,11 +5,10 @@
     using System.Linq;
     class Program
     {
-        public static Random rngGlobal = new Random(100231);
-
-        private const int populationSize = 20;
+        public static Random rngGlobal = new Random();
+        private const int populationSize = 100;
         private const int tournamentSize = 5;
-        private const int generations = 150000;
+        private const int generations = 100000;
 
         public static void Main(string[] args)
         {
@@ -36,10 +35,9 @@
                 subStrings = line.Split(null);
                 if (int.TryParse(subStrings[0], out id))
                 {
-                    City newCity = new City(id, double.Parse(subStrings[1]), double.Parse(subStrings[2]), 0.0);
+                    City newCity = new City(id, float.Parse(subStrings[1]), float.Parse(subStrings[2]), 0.0);
                     allCities.Add(newCity);
                 }
-
             }
             file.Close();
             allCities.Add(allCities[0]);
@@ -75,16 +73,15 @@
         */
         public static List<City> ShuffleList(List<City> listToShuffle, int start, int end)
         {
-            Random rng = new Random();
             List<City> randomisedList = new List<City>(listToShuffle);
-            int j = rng.Next(start, end);
+            int j = rngGlobal.Next(start, end);
             City tmp = new City();
             for (int i = start; i < end; i++)
             {
                 tmp = listToShuffle[j];
                 listToShuffle[j] = listToShuffle[i];
                 listToShuffle[i] = tmp;
-                j = rng.Next(start, end);
+                j = rngGlobal.Next(start, end);
             }
             return randomisedList;
         }
@@ -140,11 +137,11 @@
             List<City> firstOffspring = Enumerable.Repeat<City>(null, 52).ToList();
             List<City> secondOffspring = Enumerable.Repeat<City>(null, 52).ToList();
 
-            int start = rngGlobal.Next(1, firstParent.Cities.Count - 8);
-            int end = start + 7;
+            int start = rngGlobal.Next(1, firstParent.Cities.Count - 2);
+            int end = rngGlobal.Next(start, firstParent.Cities.Count - 2);
 
-            secondOffspring[0] = firstOffspring[0] = firstParent.Cities[0];
-
+            firstOffspring[0] = firstParent.Cities[0];
+            secondOffspring[0] = secondParent.Cities[0];
             for (var i = start; i <= end; i++)
             {
                 firstOffspring[i] = firstParent.Cities[i];
@@ -165,8 +162,8 @@
                 }
             }
 
-            start = rngGlobal.Next(1, secondParent.Cities.Count - 8);
-            end = start + 7;
+            //start = rngGlobal.Next(1, firstParent.Cities.Count - 2);
+            //end = rngGlobal.Next(start, firstParent.Cities.Count - 2);
 
             for (var i = start; i <= end; i++)
             {
@@ -194,9 +191,17 @@
             offspring1.CalculatePathDist();
             offsprings.Add(offspring1);
             Individual offspring2 = new Individual(secondOffspring);
-            offspring1.CalculatePathDist();
+            offspring2.CalculatePathDist();
             offsprings.Add(offspring2);
             return offsprings;
+        }
+
+        public static void PrintCityList(List<City> listToPrint)
+        {
+            foreach (City city in listToPrint)
+            {
+                Console.WriteLine("City: {0}", city.Id);
+            }
         }
 
         public static void EvolvePopulation(Population population, int generations, int tournamentSize)
@@ -210,45 +215,70 @@
                 //Individual secondParent = PerformTournamentSelection(newPopulation, tournamentSize);
                 Individual firstParent = newPopulation.Individuals[rngGlobal.Next(0, newPopulation.PopulationSize - 1)];
                 Individual secondParent = newPopulation.Individuals[rngGlobal.Next(0, newPopulation.PopulationSize - 1)];
-                List<Individual> offsprings = new List<Individual>(PerformCrossover(firstParent, secondParent));
-                offsprings[0] = Mutate(offsprings[0]);
-                offsprings[0].CalculatePathDist();
-                offsprings[1] = Mutate(offsprings[1]);
-                offsprings[1].CalculatePathDist();
-                for (var j = 0; j < newPopulation.PopulationSize - 1; j++)
+                while (firstParent == secondParent)
                 {
-                    if (newPopulation.Individuals[j].PathDistance > worstFit)
-                    {
-                        worstFit = newPopulation.Individuals[j].PathDistance;
-                        worstIdx = j;
-                    }
+                    //secondParent = PerformTournamentSelection(newPopulation, tournamentSize);
+                    //firstParent = PerformTournamentSelection(newPopulation, tournamentSize);
+                    secondParent = newPopulation.Individuals[rngGlobal.Next(0, newPopulation.PopulationSize - 1)];
+                    firstParent = newPopulation.Individuals[rngGlobal.Next(0, newPopulation.PopulationSize - 1)];
                 }
 
-                if (offsprings[0].PathDistance < offsprings[1].PathDistance)
-                {
+                List<Individual> offsprings = new List<Individual>(PerformCrossover(firstParent, secondParent));
+                offsprings[0] = Mutate(offsprings[0]);
+                offsprings[1] = Mutate(offsprings[1]);
+
+                //for (var k = 0; k < 2; k++)
+                //{
+                    for (var j = 0; j < newPopulation.PopulationSize - 1; j++)
+                    {
+                        if (newPopulation.Individuals[j].PathDistance > worstFit)
+                        {
+                            worstFit = newPopulation.Individuals[j].PathDistance;
+                            worstIdx = j;
+                        }
+                    }
                     newPopulation.Individuals[worstIdx] = offsprings[0];
-                }
-                else
+                //}
+
+               
+
+                //if (offsprings[0].PathDistance > offsprings[1].PathDistance)
+                //{
+                    
+                //}
+                //else
+                //{
+                  //  newPopulation.Individuals[worstIdx+1] = offsprings[1];
+                //}
+
+                if (i % 1000 == 0)
                 {
-                    newPopulation.Individuals[worstIdx] = offsprings[1];
+                    Console.WriteLine("Best {0}", FindFittest(newPopulation).PathDistance);
                 }
+
                 worstFit = 0.0;
             }
+            Individual fittest = FindFittest(newPopulation);
+            //PrintCityList(fittest.Cities);
             Console.WriteLine("Best dist: {0}", FindFittest(newPopulation).PathDistance);
         }
         //only do swap mutation
         public static Individual Mutate(Individual offspring)
         {
-            for (var i = 0; i < 2; i++)
+            int noMutations = rngGlobal.Next(1, 3);
+            int randIdx1 = rngGlobal.Next(1, offspring.Cities.Count - 2), randIdx2 = rngGlobal.Next(1, offspring.Cities.Count - 2);
+            for (var i = 0; i < noMutations; i++)
             {
-                City tmp = new City();
-                int randIdx1 = 0, randIdx2 = 0;
-                randIdx1 = rngGlobal.Next(1, offspring.Cities.Count - 2);
-                randIdx2 = rngGlobal.Next(1, offspring.Cities.Count - 2);
-                tmp = offspring.Cities[randIdx1];
+                while (randIdx1 == randIdx2)
+                {
+                    randIdx1 = rngGlobal.Next(1, offspring.Cities.Count - 2);
+                    randIdx2 = rngGlobal.Next(1, offspring.Cities.Count - 2);
+                }
+                City tmp = offspring.Cities[randIdx1];
                 offspring.Cities[randIdx1] = offspring.Cities[randIdx2];
                 offspring.Cities[randIdx2] = tmp;
             }
+            offspring.CalculatePathDist();
             return offspring;
         }
     }

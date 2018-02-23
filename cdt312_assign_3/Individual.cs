@@ -18,7 +18,7 @@
         public Individual(List<City>space, double newFitness = 0.0)
         {
             Cities = new List<City>(space);
-            CalculatePathDist();
+            //CalculatePathDist();
         }
 
         public void CalculatePathDist()
