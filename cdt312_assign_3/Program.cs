@@ -6,8 +6,8 @@
     class Program
     {
         public static Random rngGlobal = new Random();
-        private const int populationSize = 100;
-        private const int tournamentSize = 5;
+        private const int populationSize = 50;
+        private const int tournamentSize = 10;
         private const int generations = 100000;
 
         public static void Main(string[] args)
@@ -211,16 +211,16 @@
             double worstFit = 0.0;
             for (var i = 0; i < generations; i++)
             {
-                //Individual firstParent = PerformTournamentSelection(newPopulation, tournamentSize);
-                //Individual secondParent = PerformTournamentSelection(newPopulation, tournamentSize);
-                Individual firstParent = newPopulation.Individuals[rngGlobal.Next(0, newPopulation.PopulationSize - 1)];
-                Individual secondParent = newPopulation.Individuals[rngGlobal.Next(0, newPopulation.PopulationSize - 1)];
+                Individual firstParent = PerformTournamentSelection(newPopulation, tournamentSize);
+                Individual secondParent = PerformTournamentSelection(newPopulation, tournamentSize);
+                //Individual firstParent = newPopulation.Individuals[rngGlobal.Next(0, newPopulation.PopulationSize - 1)];
+                //Individual secondParent = newPopulation.Individuals[rngGlobal.Next(0, newPopulation.PopulationSize - 1)];
                 while (firstParent == secondParent)
                 {
-                    //secondParent = PerformTournamentSelection(newPopulation, tournamentSize);
-                    //firstParent = PerformTournamentSelection(newPopulation, tournamentSize);
-                    secondParent = newPopulation.Individuals[rngGlobal.Next(0, newPopulation.PopulationSize - 1)];
-                    firstParent = newPopulation.Individuals[rngGlobal.Next(0, newPopulation.PopulationSize - 1)];
+                    secondParent = PerformTournamentSelection(newPopulation, tournamentSize);
+                    firstParent = PerformTournamentSelection(newPopulation, tournamentSize);
+                    //secondParent = newPopulation.Individuals[rngGlobal.Next(0, newPopulation.PopulationSize - 1)];
+                    //firstParent = newPopulation.Individuals[rngGlobal.Next(0, newPopulation.PopulationSize - 1)];
                 }
 
                 List<Individual> offsprings = new List<Individual>(PerformCrossover(firstParent, secondParent));
@@ -237,19 +237,19 @@
                             worstIdx = j;
                         }
                     }
+                //newPopulation.Individuals[worstIdx] = offsprings[0];
+                //}
+
+
+
+                if (offsprings[0].PathDistance < offsprings[1].PathDistance)
+                {
                     newPopulation.Individuals[worstIdx] = offsprings[0];
-                //}
-
-               
-
-                //if (offsprings[0].PathDistance > offsprings[1].PathDistance)
-                //{
-                    
-                //}
-                //else
-                //{
-                  //  newPopulation.Individuals[worstIdx+1] = offsprings[1];
-                //}
+                }
+                else
+                {
+                    newPopulation.Individuals[worstIdx] = offsprings[1];
+                }
 
                 if (i % 1000 == 0)
                 {
