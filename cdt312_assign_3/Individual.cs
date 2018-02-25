@@ -30,5 +30,27 @@
             }
             PathDistance = dist;
         }
+
+        public void VerifySolution()
+        {
+            var occurence = 0;
+
+            foreach (City city in Cities)
+            {
+                foreach (City other in Cities)
+                {
+                    if (city.Id == other.Id && city.Id != 1)
+                    {
+                        occurence++;
+                        if (occurence > 1)
+                        {
+                            Console.WriteLine("SOLUTION WAS NOT CORRECT DUPLICATE ID FOUND!");
+                            break;
+                        }
+                    }
+                }
+                occurence = 0;
+            }
+        }
     }
 }
