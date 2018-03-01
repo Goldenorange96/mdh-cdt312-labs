@@ -1,0 +1,6 @@
+C:\Users\GoldenOrange\mdh-cdt312-labs\cdt312_assign_4\bin\Release\cdt312_assign_4.exe.config
+C:\Users\GoldenOrange\mdh-cdt312-labs\cdt312_assign_4\bin\Release\cdt312_assign_4.exe
+C:\Users\GoldenOrange\mdh-cdt312-labs\cdt312_assign_4\bin\Release\cdt312_assign_4.pdb
+C:\Users\GoldenOrange\mdh-cdt312-labs\cdt312_assign_4\obj\Release\cdt312_assign_4.csproj.CoreCompileInputs.cache
+C:\Users\GoldenOrange\mdh-cdt312-labs\cdt312_assign_4\obj\Release\cdt312_assign_4.exe
+C:\Users\GoldenOrange\mdh-cdt312-labs\cdt312_assign_4\obj\Release\cdt312_assign_4.pdb

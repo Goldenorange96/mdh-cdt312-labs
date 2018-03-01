@@ -206,6 +206,7 @@
             Population newPopulation = new Population(population.PopulationSize, population.Individuals);
             int worstIdx = 0;
             double worstFit = 0.0;
+            Console.WriteLine("Best {0}", FindFittest(newPopulation).PathDistance);
             for (var i = 0; i < generations; i++)
             {
                 //Individual firstParent = PerformTournamentSelection(newPopulation, tournamentSize);
@@ -242,7 +243,7 @@
                     newPopulation.Individuals[worstIdx] = offsprings[1];
                 }
 
-                if (i % 1000 == 0)
+                if (i % 5000 == 0)
                 {
                     Console.WriteLine("Best {0}", FindFittest(newPopulation).PathDistance);
                 }
