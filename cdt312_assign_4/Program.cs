@@ -11,6 +11,12 @@
             ReadFile(ref trainingCases, ref validationCases);
             ListUtilities.PrintList(trainingCases);
             NeuralNetwork network = new NeuralNetwork(3, 3, 2);
+            int noIterations = trainingCases.Count + validationCases.Count;
+            for (var i = 0; i < trainingCases.Count; i++)
+            {
+                network.AssignInputValues(trainingCases[i]);
+            }
+
             Console.ReadKey();
         }
 

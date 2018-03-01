@@ -4,6 +4,8 @@
     using System.Windows;
     class NNMath
     {
+        public static Random rng = new Random();
+
         /* 
         * input: value corresponding to element in weight vector.
         * output: calculated new neuron value using sigmoid.
