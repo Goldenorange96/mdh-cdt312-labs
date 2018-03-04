@@ -15,13 +15,12 @@
 
         public static double[] CalcVectorMatrixProduct(double[] activationVector, double[,] weightMatrix)
         {
-            double[] result = new double[3];
-
-            for (var i = 0; i < weightMatrix.Length; i++)
+            double[] result = new double[weightMatrix.GetLength(0)];
+            for (var i = 0; i < weightMatrix.GetLength(0); i++)
             {
-                for (var j = 0; j < weightMatrix.Length; i++)
+                for (var j = 0; j < weightMatrix.GetLength(1); j++)
                 {
-                    result[i] += weightMatrix[i, j] * activationVector[j];
+                    result[i] += (weightMatrix[i, j] * activationVector[j]);
                 }
             }
             result = CalcSigmoid(result);
@@ -31,11 +30,12 @@
         public static double[] CalcSigmoid(double[] val)
         {
             double[] result = new double[val.Length];
-            for (var i = 0; i < val.Length; i++)
+            double tmp = 0.0;
+            for (var i = 0; i < val.GetLength(0); i++)
             {
-                result[i] = (1.0 / (1.0 + (Math.Pow(Math.E, -val[i]))));
+                tmp = Math.Pow(Math.E, -val[i]);
+                result[i] = (1.0 / (1.0 + tmp));
             }
-
             return result;
         }
     }

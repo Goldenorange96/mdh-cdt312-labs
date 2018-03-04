@@ -9,14 +9,14 @@
             List<Passenger> trainingCases = new List<Passenger>();
             List<Passenger> validationCases = new List<Passenger>();
             ReadFile(ref trainingCases, ref validationCases);
-            ListUtilities.PrintList(trainingCases);
-            NeuralNetwork network = new NeuralNetwork(3, 3, 2, 1, trainingCases[0]);
+            //ListUtilities.PrintList(trainingCases);
+            NeuralNetwork network = new NeuralNetwork(3, 3, 2, 1, trainingCases[0], trainingCases.Count);
             int noIterations = trainingCases.Count + validationCases.Count;
             for (var i = 0; i < trainingCases.Count; i++)
             {
-                network.AssignInputValues(trainingCases[i]);
+                network.ProcessCase(trainingCases[i], i);
             }
-
+            NeuralNetwork.PrintVector(NeuralNetwork.survived);
             Console.ReadKey();
         }
 
