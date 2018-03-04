@@ -13,16 +13,30 @@
         * Function applies Sigmoid calculation on the provided value, return value will be in range [0,1]
         */
 
-        static double[] CalcVectorMatrixProduct(double[] activationVector, double[,] weightMatrix)
+        public static double[] CalcVectorMatrixProduct(double[] activationVector, double[,] weightMatrix)
         {
             double[] result = new double[3];
 
+            for (var i = 0; i < weightMatrix.Length; i++)
+            {
+                for (var j = 0; j < weightMatrix.Length; i++)
+                {
+                    result[i] += weightMatrix[i, j] * activationVector[j];
+                }
+            }
+            result = CalcSigmoid(result);
             return result;
         }
 
-        static double CalcSigmoid(double val)
+        public static double[] CalcSigmoid(double[] val)
         {
-            return (1.0 / (1.0 + (Math.Pow(Math.E, -val))));
+            double[] result = new double[val.Length];
+            for (var i = 0; i < val.Length; i++)
+            {
+                result[i] = (1.0 / (1.0 + (Math.Pow(Math.E, -val[i]))));
+            }
+
+            return result;
         }
     }
 }

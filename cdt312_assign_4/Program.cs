@@ -10,7 +10,7 @@
             List<Passenger> validationCases = new List<Passenger>();
             ReadFile(ref trainingCases, ref validationCases);
             ListUtilities.PrintList(trainingCases);
-            NeuralNetwork network = new NeuralNetwork(3, 3, 2);
+            NeuralNetwork network = new NeuralNetwork(3, 3, 2, 1, trainingCases[0]);
             int noIterations = trainingCases.Count + validationCases.Count;
             for (var i = 0; i < trainingCases.Count; i++)
             {
