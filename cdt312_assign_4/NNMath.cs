@@ -22,6 +22,7 @@
                 {
                     result[i] += (weightMatrix[i, j] * activationVector[j]);
                 }
+                result[i] += Params.Bias;
             }
             result = CalcSigmoid(result);
             return result;

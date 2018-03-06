@@ -64,6 +64,7 @@
   <ItemGroup>
     <Compile Include="ListUtilities.cs" />
     <Compile Include="NeuralNetwork.cs" />
+    <Compile Include="Params.cs" />
     <Compile Include="Passenger.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

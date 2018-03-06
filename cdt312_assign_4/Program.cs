@@ -10,23 +10,20 @@
             List<Passenger> validationCases = new List<Passenger>();
             ReadFile(ref trainingCases, ref validationCases);
             //ListUtilities.PrintList(trainingCases);
-            NeuralNetwork network = new NeuralNetwork(3, 3, 2, 1, trainingCases.Count);
-            int noIterations = trainingCases.Count + validationCases.Count;
-            int ret = 0, noCorrectCases = 0;
+            NeuralNetwork network = new NeuralNetwork(3, 5, 3, 1, trainingCases.Count);
+            int noCorrectCases = 0;
             for (var i = 0; i < trainingCases.Count - 1; i++)
             {
                 network.TrainNetwork(trainingCases[i], i);
             }
             for (var i = 0; i < validationCases.Count - 1; i++)
             {
-                ret = network.RunNetwork(validationCases[i]);
-                if (ret == validationCases[i].Survived)
+                if (network.RunNetwork(validationCases[i]) == validationCases[i].Survived)
                 {
                     noCorrectCases++;
                 }
             }
             Console.WriteLine("Number of correct cases: {0}", noCorrectCases);
-            //NeuralNetwork.PrintVector(NeuralNetwork.survived);
             Console.ReadKey();
         }
 
