@@ -7,3 +7,11 @@ C:\Users\GoldenOrange\mdh-cdt312-labs\cdt312_assign_4\obj\Debug\cdt312_assign_4.
 C:\Users\GoldenOrange\mdh-cdt312-labs\cdt312_assign_4\obj\Debug\cdt312_assign_4.pdb
 C:\Users\GoldenOrange\mdh-cdt312-labs\cdt312_assign_4\bin\Debug\MathNet.Numerics.dll
 C:\Users\GoldenOrange\mdh-cdt312-labs\cdt312_assign_4\bin\Debug\MathNet.Numerics.xml
+C:\Users\Janne Suuronen\mdh-cdt312-labs\cdt312_assign_4\bin\Debug\cdt312_assign_4.exe.config
+C:\Users\Janne Suuronen\mdh-cdt312-labs\cdt312_assign_4\bin\Debug\cdt312_assign_4.exe
+C:\Users\Janne Suuronen\mdh-cdt312-labs\cdt312_assign_4\bin\Debug\cdt312_assign_4.pdb
+C:\Users\Janne Suuronen\mdh-cdt312-labs\cdt312_assign_4\bin\Debug\MathNet.Numerics.dll
+C:\Users\Janne Suuronen\mdh-cdt312-labs\cdt312_assign_4\bin\Debug\MathNet.Numerics.xml
+C:\Users\Janne Suuronen\mdh-cdt312-labs\cdt312_assign_4\obj\Debug\cdt312_assign_4.csprojResolveAssemblyReference.cache
+C:\Users\Janne Suuronen\mdh-cdt312-labs\cdt312_assign_4\obj\Debug\cdt312_assign_4.exe
+C:\Users\Janne Suuronen\mdh-cdt312-labs\cdt312_assign_4\obj\Debug\cdt312_assign_4.pdb

@@ -10,13 +10,23 @@
             List<Passenger> validationCases = new List<Passenger>();
             ReadFile(ref trainingCases, ref validationCases);
             //ListUtilities.PrintList(trainingCases);
-            NeuralNetwork network = new NeuralNetwork(3, 3, 2, 1, trainingCases[0], trainingCases.Count);
+            NeuralNetwork network = new NeuralNetwork(3, 3, 2, 1, trainingCases.Count);
             int noIterations = trainingCases.Count + validationCases.Count;
-            for (var i = 0; i < trainingCases.Count; i++)
+            int ret = 0, noCorrectCases = 0;
+            for (var i = 0; i < trainingCases.Count - 1; i++)
             {
-                network.ProcessCase(trainingCases[i], i);
+                network.TrainNetwork(trainingCases[i], i);
             }
-            NeuralNetwork.PrintVector(NeuralNetwork.survived);
+            for (var i = 0; i < validationCases.Count - 1; i++)
+            {
+                ret = network.RunNetwork(validationCases[i]);
+                if (ret == validationCases[i].Survived)
+                {
+                    noCorrectCases++;
+                }
+            }
+            Console.WriteLine("Number of correct cases: {0}", noCorrectCases);
+            //NeuralNetwork.PrintVector(NeuralNetwork.survived);
             Console.ReadKey();
         }
 
@@ -46,8 +56,5 @@
             }
             file.Close();
         }
-
-       
-
     }
 }
