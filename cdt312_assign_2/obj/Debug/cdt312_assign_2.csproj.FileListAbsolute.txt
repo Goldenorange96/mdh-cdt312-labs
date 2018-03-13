@@ -5,3 +5,9 @@ C:\Users\GoldenOrange\mdh-cdt312-labs\cdt312_assign_2\obj\Debug\cdt312_assign_2.
 C:\Users\GoldenOrange\mdh-cdt312-labs\cdt312_assign_2\obj\Debug\cdt312_assign_2.exe
 C:\Users\GoldenOrange\mdh-cdt312-labs\cdt312_assign_2\obj\Debug\cdt312_assign_2.pdb
 C:\Users\GoldenOrange\mdh-cdt312-labs\cdt312_assign_2\obj\Debug\cdt312_assign_2.csprojResolveAssemblyReference.cache
+C:\Users\Janne Suuronen\mdh-cdt312-labs\cdt312_assign_2\bin\Debug\cdt312_assign_2.exe.config
+C:\Users\Janne Suuronen\mdh-cdt312-labs\cdt312_assign_2\bin\Debug\cdt312_assign_2.exe
+C:\Users\Janne Suuronen\mdh-cdt312-labs\cdt312_assign_2\bin\Debug\cdt312_assign_2.pdb
+C:\Users\Janne Suuronen\mdh-cdt312-labs\cdt312_assign_2\obj\Debug\cdt312_assign_2.csprojResolveAssemblyReference.cache
+C:\Users\Janne Suuronen\mdh-cdt312-labs\cdt312_assign_2\obj\Debug\cdt312_assign_2.exe
+C:\Users\Janne Suuronen\mdh-cdt312-labs\cdt312_assign_2\obj\Debug\cdt312_assign_2.pdb

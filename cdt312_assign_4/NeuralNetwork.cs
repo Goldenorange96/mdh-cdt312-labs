@@ -13,7 +13,7 @@
         {
             weightMatrices = new List<double[,]>();
             activationVectors = new List<double[]>();
-            InitialiseWeightMatrix(newNoInput, newNoInput - 1);
+            InitialiseWeightMatrix(newNoInput - 1, newNoInput);
             InitialiseWeightMatrix(newNoHidden - 1, newNoHidden);
             InitialiseActivationVectors(newNoInput, newNoHidden, newNoOutput);
             NoLayers = newNoLayers;
@@ -53,9 +53,6 @@
             activationVectors[0][0] = individual.Class;
             activationVectors[0][1] = individual.Age;
             activationVectors[0][2] = individual.Sex;
-            activationVectors[0][3] = 1.0;
-            activationVectors[0][4] = 1.0;
-
         }
 
         public void TrainNetwork(Passenger individual, int caseNo)
@@ -65,7 +62,7 @@
             {
                 activationVectors[i + 1] = NNMath.CalcVectorMatrixProduct(activationVectors[i], weightMatrices[i]);
             }
-            Console.WriteLine("Output: {0}", activationVectors[2][0]);
+            //Console.WriteLine("Output: {0}", activationVectors[2][0]);
             if (individual.Survived < 0)
             {
                 Backpropegate(0.25);
@@ -82,6 +79,11 @@
             for (var i = 0; i < NoLayers - 1; i++)
             {
                 activationVectors[i + 1] = NNMath.CalcVectorMatrixProduct(activationVectors[i], weightMatrices[i]);
+            }
+            int expected = GetSurvivedValue(activationVectors[2][0]);
+            if (expected == 1)
+            {
+                Console.WriteLine("Ex: {0} Act:{1}", individual.Survived, activationVectors[2][0]);
             }
             return GetSurvivedValue(activationVectors[2][0]);
         }
@@ -105,20 +107,32 @@
             Console.WriteLine("*-----*");
         }
 
+        public static void PrintMatrix<T>(T[,] matrixToPrint)
+        {
+            Console.WriteLine("*** Printing Matrix ***");
+            for (var i = 0; i < matrixToPrint.GetLength(0); i++)
+            {
+                for (var j = 0; j < matrixToPrint.GetLength(1); j++)
+                {
+                    Console.Write(" {0} ", matrixToPrint[i,j]);
+                }
+                Console.WriteLine("");
+            }
+        }
+
         public void Backpropegate(double target)
         {
-
             double outputError = activationVectors[2][0] * (1.0 - activationVectors[2][0]) * (target - activationVectors[2][0]);
             for (var i = 0; i < weightMatrices[1].GetLength(1); i++)
             {
-                if (i != weightMatrices[1].GetLength(1) - 1)
-                {
+                //if (i != weightMatrices[1].GetLength(1) - 1)
+                //{
                     weightMatrices[1][0, i] += Params.LearningRate * outputError * activationVectors[1][i];
-                }
-                else
-                {
-                    weightMatrices[1][0, i] += Params.LearningRate * outputError * Params.Bias;
-                }
+                //}
+                //else
+                //{
+                    //weightMatrices[1][0, i] += Params.LearningRate * outputError * Params.Bias;
+                //}
             }
 
             for (var i = 0; i < weightMatrices[0].GetLength(0); i++)
@@ -126,14 +140,14 @@
                 double errorHidden = activationVectors[1][i] * (1.0 - activationVectors[1][i]) * weightMatrices[1][0, i] * outputError;
                 for (var j = 0; j < weightMatrices[0].GetLength(1); j++)
                 {
-                    if (j != weightMatrices[0].GetLength(1) - 1)
-                    {
+                    //if (j != weightMatrices[0].GetLength(1) - 1)
+                    //{
                         weightMatrices[0][i, j] += Params.LearningRate * errorHidden * activationVectors[0][j];
-                    }
-                    else
-                    {
-                        weightMatrices[0][i, j] += Params.LearningRate * errorHidden * Params.Bias;
-                    }
+                    //}
+                    //else
+                    //{
+                    //    weightMatrices[0][i, j] += Params.LearningRate * errorHidden * Params.Bias;
+                    //}
                 }
                 
             }

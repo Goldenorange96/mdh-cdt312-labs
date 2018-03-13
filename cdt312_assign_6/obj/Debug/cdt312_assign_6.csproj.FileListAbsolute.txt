@@ -1,0 +1,6 @@
+C:\Users\Janne Suuronen\mdh-cdt312-labs\cdt312_assign_6\bin\Debug\cdt312_assign_6.exe.config
+C:\Users\Janne Suuronen\mdh-cdt312-labs\cdt312_assign_6\bin\Debug\cdt312_assign_6.exe
+C:\Users\Janne Suuronen\mdh-cdt312-labs\cdt312_assign_6\bin\Debug\cdt312_assign_6.pdb
+C:\Users\Janne Suuronen\mdh-cdt312-labs\cdt312_assign_6\obj\Debug\cdt312_assign_6.csprojResolveAssemblyReference.cache
+C:\Users\Janne Suuronen\mdh-cdt312-labs\cdt312_assign_6\obj\Debug\cdt312_assign_6.exe
+C:\Users\Janne Suuronen\mdh-cdt312-labs\cdt312_assign_6\obj\Debug\cdt312_assign_6.pdb
