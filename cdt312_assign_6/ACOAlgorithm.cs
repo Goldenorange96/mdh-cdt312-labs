@@ -3,15 +3,17 @@
     using System.Collections.Generic;
     class ACOAlgorithm
     {
+        public int NoAnts;
+        public double EvaporationFactor;
+        public Ant[] Ants;
         public static double[,] Phermones;
         public static double[,] Distances;
         public static double[,] Heuristics;
-        public int NoAnts;
-        public Ant[] Ants;
 
-        public ACOAlgorithm(int dim, int noAnts, List<City> allCities)
+        public ACOAlgorithm(int dim, int noAnts, List<City> allCities, double evapFac)
         {
             NoAnts = noAnts;
+            EvaporationFactor = evapFac;
             InitialiseAnts(allCities[0]);
             InitialisePhermones(allCities.Count - 1);
             InitialiseDistances(allCities, allCities.Count - 1);
@@ -79,6 +81,40 @@
                     Heuristics[i, j] = 1.0 / Distances[i, j];
                 }
             }
+        }
+
+        public void UpdatePheromone()
+        {
+            double t = 0.0;
+            for (int i = 0; i < Phermones.GetLength(0); i++)
+            {
+                for (int j = 0; j < Phermones.GetLength(1); i++)
+                {
+                    Phermones[i,j] = (1.0 - EvaporationFactor) + 
+                }
+            }
+            for (int i = 0; i < Ants.Length; i++)
+            {
+                double temp = 0.0;
+                if ()
+                {
+                    temp += 1.0 / Ants[i].Cost;
+                }
+            }
+
+        }
+
+        public int FindBest()
+        {
+            int idx = 0;
+            for (int i = 1; i < NoAnts; i++)
+            {
+                if (Ants[i].Cost < Ants[idx].Cost)
+                {
+                    idx = i;
+                }
+            }
+            return idx;
         }
 
     }
