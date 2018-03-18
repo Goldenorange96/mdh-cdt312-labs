@@ -5,7 +5,7 @@
     {
         public int NoAnts;
         public double EvaporationFactor;
-        public Ant[] Ants;
+        public List<Ant> Ants;
         public static double[,] Phermones;
         public static double[,] Distances;
         public static double[,] Heuristics;
@@ -22,10 +22,11 @@
 
         public void InitialiseAnts(City initialCity)
         {
-            Ants = new Ant[NoAnts];
+            Ants = new List<Ant>();
             for (var i = 0; i < NoAnts; i++)
             {
-                Ants[i] = new Ant(initialCity);
+               Ant newAnt = new Ant(initialCity);
+                Ants.Add(newAnt);
             }
         }
 
@@ -83,25 +84,18 @@
             }
         }
 
-        public void UpdatePheromone()
+        public void UpdatePheromones(int i, int j)
         {
-            double t = 0.0;
-            for (int i = 0; i < Phermones.GetLength(0); i++)
+            double t = 0.0, visitedTerm = 0.0;
+            for (int k = 0; k < Ants.Count - 1; k++)
             {
-                for (int j = 0; j < Phermones.GetLength(1); i++)
+                if (Ants[k].HasVisitedEdge(i, j))
                 {
-                    Phermones[i,j] = (1.0 - EvaporationFactor) + 
+                    visitedTerm += 1.0 / Ants[k].Cost;
                 }
             }
-            for (int i = 0; i < Ants.Length; i++)
-            {
-                double temp = 0.0;
-                if ()
-                {
-                    temp += 1.0 / Ants[i].Cost;
-                }
-            }
-
+            t = (1.0 - EvaporationFactor) * (Phermones[i, j]) + visitedTerm;
+            Phermones[i, j] = t;
         }
 
         public int FindBest()

@@ -22,7 +22,7 @@ namespace Cdt312_assign_6
         public static double CalculateDistance(City toCity, City fromCity)
         {
             double a = (toCity.X - fromCity.X) * (toCity.X - fromCity.X);
-            double b = (toCity.Y - fromCity.Y) * (toCity.Y - toCity.Y);
+            double b = (toCity.Y - fromCity.Y) * (toCity.Y - fromCity.Y);
             return Math.Sqrt(a + b);
         }
     }
