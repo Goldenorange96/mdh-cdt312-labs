@@ -8,6 +8,8 @@ namespace Cdt312_assign_6
 {
     class MathExtension
     {
+        public static Random rng = new Random();
+
         public static void InitaliseMatrix(ref double[,] matrix, double value)
         {
             for (var i = 0; i < matrix.GetLength(0); i++)
@@ -25,5 +27,6 @@ namespace Cdt312_assign_6
             double b = (toCity.Y - fromCity.Y) * (toCity.Y - fromCity.Y);
             return Math.Sqrt(a + b);
         }
-    }
+    } 
+
 }

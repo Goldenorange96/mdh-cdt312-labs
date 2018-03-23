@@ -3,6 +3,7 @@ namespace Cdt312_assign_6
 {
     using System.Collections.Generic;
     using System;
+    using System.Linq;
     class Ant
     {
         public double Cost;
@@ -15,9 +16,10 @@ namespace Cdt312_assign_6
             Visited.Add(initialCity);
             Current = initialCity;
         }
+
         private void FindUnvisited(List<City> allCities, ref List<City> unvisited)
         {
-            for(var i = 0; i < allCities.Count - 1; i++)
+            for(var i = 1; i < allCities.Count-1; i++)
             {
                 if (!Visited.Contains(allCities[i]))
                 {
@@ -32,41 +34,72 @@ namespace Cdt312_assign_6
         public void Transition(double[,] phermoneMat, double[,] heuristicMat, List<City> allCities)
         {
             List<City> unvisited = new List<City>();
+            List<double> probabilities = new List<double>();
             FindUnvisited(allCities, ref unvisited);
-            double largestProp = 0.0, temp = 0.0;
-            int idx = 0;
-            for (var i = 0; i < unvisited.Count - 1; i++)
+            if (unvisited.Count < 1)
             {
-                temp = CalculateProbability(unvisited[i], unvisited);
-                if (temp > largestProp)
+                return;
+            }
+            for (var i = 0; i < unvisited.Count; i++)
+            {
+                probabilities.Add(CalculateProbability(unvisited[i], unvisited));
+            }    
+            Visited.Add(unvisited[PickCity(probabilities)]);
+            Current = Visited.Last();
+            return;
+        }
+
+        private bool VerifyProbabilityList(List<double> props)
+        {
+            int idx = props.FindIndex(x => x == double.NaN);
+            if (idx == -1)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        private int PickCity(List<double> probabilities)
+        {
+            double propSum = 0.0;
+            for (var i = 0; i < probabilities.Count; i++)
+            {
+                propSum += probabilities[i];
+            }
+            double threshold = MathExtension.rng.NextDouble() * propSum;
+            double sum = 0.0;
+            for(var i = 0; i < probabilities.Count; i++)
+            {
+                sum += probabilities[i];
+                if (threshold <= sum)
                 {
-                    largestProp = temp;
-                    idx = i;
+                    return i;
                 }
             }
-            Visited.Add(allCities[idx]);
-            Current = allCities[idx];
+            return -1;
         }
         /*
          * Desc: Function will calculate the probability that a ant will move to sent city. 
          */
         private double CalculateProbability(City toCity, List<City> unvisited)
         {
-            double alpha = 0.5, beta = 1.0, numerator = 0.0, denominator = 0.0;
-            numerator = Math.Pow(ACOAlgorithm.Phermones[Current.Id-1, toCity.Id-1], alpha) * Math.Pow(ACOAlgorithm.Heuristics[Current.Id-1, toCity.Id-1], beta);
+            double alpha = 2.0, beta = 8.0, denominator = 0.0;
+            double numerator = ((Math.Pow(ACOAlgorithm.Phermones[Current.Id - 1, toCity.Id - 1], alpha)) * (Math.Pow(ACOAlgorithm.Heuristics[Current.Id - 1, toCity.Id - 1], beta)));
 
-            for (var i = 0; i < unvisited.Count - 1; i++)
+            for (var i = 0; i < unvisited.Count; i++)
             {
-                denominator += Math.Pow(ACOAlgorithm.Phermones[Current.Id-1, unvisited[i].Id-1], alpha) * Math.Pow(ACOAlgorithm.Heuristics[Current.Id-1, unvisited[i].Id-1], beta);
+                if (unvisited[i].Id != toCity.Id)
+                {
+                    denominator += (Math.Pow(ACOAlgorithm.Phermones[Current.Id - 1, unvisited[i].Id - 1], alpha)) * (Math.Pow(ACOAlgorithm.Heuristics[Current.Id - 1, unvisited[i].Id - 1], beta));
+                }
             }
-
-            return numerator / denominator;
+            return (numerator / denominator);
         }
 
         public void CalculateCost()
         {
             Cost = 0.0;
-            for (var i = 0; i < Visited.Count - 1; i++)
+            for (var i = 0; i < Visited.Count-1; i++)
             {
                 Cost += ACOAlgorithm.Distances[Visited[i].Id-1, Visited[i+1].Id-1];
             }
@@ -76,7 +109,7 @@ namespace Cdt312_assign_6
         {
             for (int k = 0; k < Visited.Count-1; k++)
             {
-                if (Visited[i].Id == i && Visited[i + 1].Id == j)
+                if (Visited[k].Id == i && Visited[k + 1].Id == j)
                     return true;
             }
             return false;

@@ -1,6 +1,8 @@
 ﻿namespace Cdt312_assign_6
 {
+    using System;
     using System.Collections.Generic;
+    using System.Linq;
     class ACOAlgorithm
     {
         public int NoAnts;
@@ -10,7 +12,7 @@
         public static double[,] Distances;
         public static double[,] Heuristics;
 
-        public ACOAlgorithm(int dim, int noAnts, List<City> allCities, double evapFac)
+        public ACOAlgorithm(int noAnts, List<City> allCities, double evapFac)
         {
             NoAnts = noAnts;
             EvaporationFactor = evapFac;
@@ -26,7 +28,7 @@
             for (var i = 0; i < NoAnts; i++)
             {
                Ant newAnt = new Ant(initialCity);
-                Ants.Add(newAnt);
+               Ants.Add(newAnt);
             }
         }
 
@@ -40,15 +42,7 @@
             {
                 for (var j = 0; j < dim; j++)
                 {
-                    if (!(j == i))
-                    {
-                        Phermones[i, j] = 10.0;
-                    }
-                    else
-                    {
-                        Phermones[i, j] = 0.0;
-                    }
-
+                    Phermones[i, j] = 10.0;
                 }
             }
         }
@@ -60,14 +54,7 @@
             {
                 for (var j = 0; j < dim; j++)
                 {
-                    if (!(j == i))
-                    {
-                        Distances[i, j] = MathExtension.CalculateDistance(allCities[j], allCities[i]);
-                    }
-                    else
-                    {
-                        Distances[i, j] = 0.0;
-                    }
+                    Distances[i, j] = MathExtension.CalculateDistance(allCities[i], allCities[j]);
                 }
             }
         }
@@ -79,7 +66,7 @@
             {
                 for (var j = 0; j < dim; j++)
                 {
-                    Heuristics[i, j] = 1.0 / Distances[i, j];
+                    Heuristics[i, j] = (1.0 / Distances[i, j]);
                 }
             }
         }
@@ -91,10 +78,11 @@
             {
                 if (Ants[k].HasVisitedEdge(i, j))
                 {
-                    visitedTerm += 1.0 / Ants[k].Cost;
+                    visitedTerm += (1.0 / Ants[k].Cost);
                 }
+                visitedTerm += 0.0;
             }
-            t = (1.0 - EvaporationFactor) * (Phermones[i, j]) + visitedTerm;
+            t = (1.0 - EvaporationFactor) * Phermones[i, j] + visitedTerm;
             Phermones[i, j] = t;
         }
 
@@ -111,5 +99,59 @@
             return idx;
         }
 
+        public void Run(List<City> allCities, int maxIterations)
+        {
+            int iterationBestIdx = 0;
+            double bestCost = 0.0;
+            List<City> bestPath = new List<City>();
+            for (int i = 0; i < maxIterations; i++)
+            {
+                for (int j = 0; j < allCities.Count; j++)
+                {
+                    for (int k = 0; k < NoAnts; k++)
+                    {
+                        Ants[k].Transition(Phermones, Heuristics, allCities);
+                    }
+                }
+
+                for (int j = 0; j < NoAnts; j++)
+                {
+                    Ants[j].Visited.Add(allCities[0]);
+                    Ants[j].CalculateCost();
+                }
+
+                iterationBestIdx = FindBest();       
+
+                for (int j = 0; j < Phermones.GetLength(0); j++)
+                {
+                    for (int k = 0; k < Phermones.GetLength(1); k++)
+                    {
+                        UpdatePheromones(j, k);
+                    }
+                }
+
+                if (bestCost != 0.0)
+                {
+                    if (Ants[iterationBestIdx].Cost < bestCost)
+                    {
+                        bestCost = Ants[iterationBestIdx].Cost;
+                        bestPath = new List<City>(Ants[iterationBestIdx].Visited);
+                    }
+                }
+                else
+                {
+                    bestCost = Ants[iterationBestIdx].Cost;
+                    bestPath = new List<City>(Ants[iterationBestIdx].Visited);
+                }
+
+                for (int j = 0; j < Ants.Count; j++)
+                {
+                    Ants[j].Visited.Clear();
+                    Ants[j].Visited.Add(allCities[0]);
+                    Ants[j].Cost = 0.0;
+                }
+            }
+            Console.WriteLine("Best path cost found: {0}, after {1} iterations", bestCost, maxIterations);
+        }
     }
 }
