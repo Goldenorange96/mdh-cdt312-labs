@@ -150,6 +150,7 @@
                     Ants[j].Visited.Add(allCities[0]);
                     Ants[j].Cost = 0.0;
                 }
+                Console.WriteLine("Distance after {0} iterations: {1}", i, bestCost);
             }
             Console.WriteLine("Best path cost found: {0}, after {1} iterations", bestCost, maxIterations);
         }

@@ -83,7 +83,7 @@ namespace Cdt312_assign_6
          */
         private double CalculateProbability(City toCity, List<City> unvisited)
         {
-            double alpha = 2.0, beta = 8.0, denominator = 0.0;
+            double alpha = 2.0, beta = 3.0, denominator = 0.0;
             double numerator = ((Math.Pow(ACOAlgorithm.Phermones[Current.Id - 1, toCity.Id - 1], alpha)) * (Math.Pow(ACOAlgorithm.Heuristics[Current.Id - 1, toCity.Id - 1], beta)));
 
             for (var i = 0; i < unvisited.Count; i++)
